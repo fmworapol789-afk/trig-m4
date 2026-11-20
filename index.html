@@ -48,7 +48,6 @@
     h1 { font-size: 1.25rem; margin: 0 0 4px; }
     .subtitle { font-size: 0.85rem; color: var(--muted); margin: 0 0 14px; line-height: 1.45; }
 
-    /* แถบนำทาง 3 ขั้นตอน */
     .tabs {
       display: grid;
       grid-template-columns: 1fr 1fr 1.25fr;
@@ -66,7 +65,6 @@
       font-size: 0.85rem;
       font-weight: 700;
       cursor: pointer;
-      white-space: nowrap;
     }
 
     .tab-btn.active {
@@ -92,7 +90,6 @@
       height: auto;
     }
 
-    /* ==================== โหมดสำรวจ ==================== */
     .presets {
       display: flex;
       flex-wrap: wrap;
@@ -185,7 +182,6 @@
       margin-bottom: 12px;
     }
 
-    /* ==================== โหมดท้าทาย (ตามภาพต้นแบบ) ==================== */
     .challenge-panel {
       background: var(--bg-panel);
       border: 1px solid var(--border);
@@ -222,10 +218,6 @@
       font-weight: 700;
       text-align: center;
       outline: none;
-    }
-
-    .challenge-input:focus {
-      border-color: var(--accent);
     }
 
     .btn-check {
@@ -283,7 +275,6 @@
       padding-top: 4px;
     }
 
-    /* กล่องปุ่มเชื่อมลำดับกิจกรรม */
     .jump-box {
       background: rgba(34, 197, 94, 0.14);
       border: 1.5px solid #4ade80;
@@ -308,7 +299,6 @@
     .btn-submit { background: #2563eb; color: #ffffff; margin-top: 8px; }
     .btn-reset { background: #334155; color: #f8fafc; margin-top: 8px; }
 
-    /* ==================== โหมดแบบทดสอบ 5 ข้อ ==================== */
     .q-card {
       background: #1e293b;
       border: 1.5px solid #334155;
@@ -369,14 +359,12 @@
   <h1>พื้นที่พีทาโกรัส</h1>
   <p class="subtitle">สี่เหลี่ยมจัตุรัสที่สร้างบนแต่ละด้านของรูปสามเหลี่ยมมุมฉาก มีความสัมพันธ์กันอย่างไร</p>
 
-  <!-- แถบสลับ 3 โหมด -->
   <div class="tabs">
     <button type="button" class="tab-btn active" id="tabExploreBtn" onclick="switchTab('explore')">สำรวจ</button>
     <button type="button" class="tab-btn" id="tabChallengeBtn" onclick="switchTab('challenge')">ท้าทาย</button>
     <button type="button" class="tab-btn" id="tabQuizBtn" onclick="switchTab('quiz')">แบบทดสอบ 5 ข้อ</button>
   </div>
 
-  <!-- ==================== 1. แท็บสำรวจ ==================== -->
   <div class="section active" id="exploreSection">
     <div class="stage-box">
       <canvas id="exploreCanvas" width="520" height="430"></canvas>
@@ -423,4 +411,96 @@
     <div class="tip-line">ลองเลื่อนค่า a และ b หลาย ๆ ค่า แล้วสังเกตว่าผลบวกของพื้นที่สองสี่เหลี่ยมเล็ก เทียบกับสี่เหลี่ยมใหญ่เป็นอย่างไร</div>
 
     <div class="jump-box">
-      <div>สำรวจความสัมพันธ์เข้าใจแล้ว ลองฝึกคิด
+      <div>สำรวจความสัมพันธ์เข้าใจแล้ว ลองฝึกคิดเลขในโหมดท้าทายกันเลย!</div>
+      <button type="button" class="btn btn-jump" onclick="switchTab('challenge')">ไปฝึกโหมดท้าทายต่อเลย ➡️</button>
+    </div>
+  </div>
+
+  <div class="section" id="challengeSection">
+    <div class="stage-box">
+      <canvas id="challengeCanvas" width="520" height="430"></canvas>
+    </div>
+
+    <div class="challenge-panel">
+      <p class="challenge-prompt" id="challengePrompt">จงหาความยาวของ ด้านประกอบมุมฉาก b จากค่าที่ปรากฏในรูป</p>
+
+      <div class="challenge-controls">
+        <input type="number" inputmode="numeric" class="challenge-input" id="challengeInput" placeholder="คำตอบ..." />
+        <button type="button" class="btn-check" onclick="checkChallenge()">ตรวจคำตอบ</button>
+        <button type="button" class="btn-next" onclick="nextChallenge()">ข้อต่อไป</button>
+      </div>
+
+      <div class="challenge-feedback" id="challengeFeedback"></div>
+
+      <div class="challenge-score-row">
+        <span id="challengeScoreText">คะแนน 0 / 0</span>
+        <span id="challengeLevelText">ข้อที่ 1 / 6</span>
+      </div>
+    </div>
+
+    <div class="jump-box">
+      <div>ฝึกท้าทายคล่องแล้ว พร้อมวัดระดับความเข้าใจหรือยัง?</div>
+      <button type="button" class="btn btn-jump" onclick="switchTab('quiz')">ไปทำแบบทดสอบ 5 ข้อต่อเลย ➡️</button>
+    </div>
+  </div>
+
+  <div class="section" id="quizSection">
+    <div class="score-card" id="scoreCard">
+      <div>คะแนนของคุณ</div>
+      <div class="score-num" id="scoreNum">0 / 5</div>
+      <div id="scoreMsg" style="font-weight:700;"></div>
+      <button type="button" class="btn btn-reset" onclick="resetQuiz()">🔄 ทำแบบทดสอบใหม่อีกครั้ง</button>
+    </div>
+
+    <div id="quizList"></div>
+    <button type="button" class="btn btn-submit" id="submitBtn" onclick="gradeQuiz()">✅ ส่งคำตอบ</button>
+  </div>
+</div>
+
+<script>
+  var sideA = 3;
+  var sideB = 4;
+
+  function renderPythagorasCanvas(canvasId, a, b, hideTarget) {
+    var canvas = document.getElementById(canvasId);
+    if (!canvas || !canvas.getContext) return;
+    var ctx = canvas.getContext('2d');
+
+    var W = canvas.width || 520;
+    var H = canvas.height || 430;
+    ctx.clearRect(0, 0, W, H);
+
+    var c = Math.sqrt(a * a + b * b);
+    var areaA = a * a;
+    var areaB = b * b;
+    var areaC = areaA + areaB;
+    var isExactInt = Math.abs(c - Math.round(c)) < 1e-9;
+    var cText = isExactInt ? String(Math.round(c)) : c.toFixed(1);
+
+    var nx = -a / c;
+    var ny = -b / c;
+
+    var pts = [
+      { x: -b, y: 0 },
+      { x: 0, y: 0 },
+      { x: 0, y: -a },
+      { x: a, y: -a },
+      { x: a, y: 0 },
+      { x: -b, y: b },
+      { x: 0, y: b },
+      { x: -b + c * nx, y: c * ny },
+      { x: c * nx, y: -a + c * ny }
+    ];
+
+    var minX = pts[0].x, maxX = pts[0].x, minY = pts[0].y, maxY = pts[0].y;
+    for (var i = 1; i < pts.length; i++) {
+      if (pts[i].x < minX) minX = pts[i].x;
+      if (pts[i].x > maxX) maxX = pts[i].x;
+      if (pts[i].y < minY) minY = pts[i].y;
+      if (pts[i].y > maxY) maxY = pts[i].y;
+    }
+
+    var spanX = Math.max(1, maxX - minX);
+    var spanY = Math.max(1, maxY - minY);
+    var pad = 28;
+    var scale = Math.min
