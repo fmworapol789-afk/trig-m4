@@ -201,23 +201,9 @@
       cursor: pointer;
     }
 
-    .btn-jump {
-      background: #16a34a;
-      color: #ffffff;
-      margin-top: 8px;
-    }
-
-    .btn-submit {
-      background: #2563eb;
-      color: #ffffff;
-      margin-top: 8px;
-    }
-
-    .btn-reset {
-      background: #334155;
-      color: #f8fafc;
-      margin-top: 8px;
-    }
+    .btn-jump { background: #16a34a; color: #ffffff; margin-top: 8px; }
+    .btn-submit { background: #2563eb; color: #ffffff; margin-top: 8px; }
+    .btn-reset { background: #334155; color: #f8fafc; margin-top: 8px; }
 
     .q-card {
       background: #1e293b;
@@ -381,8 +367,8 @@
 
   function onSliderInput(fromPreset) {
     if (!fromPreset) clearPresetHighlight();
-    sideA = Number(document.getElementById('sliderA').value);
-    sideB = Number(document.getElementById('sliderB').value);
+    sideA = Number(document.getElementById('sliderA').value) || 3;
+    sideB = Number(document.getElementById('sliderB').value) || 4;
 
     var areaA = sideA * sideA;
     var areaB = sideB * sideB;
@@ -411,68 +397,87 @@
     var canvas = document.getElementById('pythaCanvas');
     if (!canvas || !canvas.getContext) return;
     var ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    var W = canvas.width || 520;
+    var H = canvas.height || 430;
+    ctx.clearRect(0, 0, W, H);
 
     var a = sideA;
     var b = sideB;
-    var c = Math.hypot(a, b);
+    var c = Math.sqrt(a * a + b * b);
     var areaA = a * a;
     var areaB = b * b;
     var areaC = areaA + areaB;
     var isExactInt = Math.abs(c - Math.round(c)) < 1e-9;
     var cText = isExactInt ? String(Math.round(c)) : '√' + areaC;
 
-    // มุมฉากอยู่ที่ (0, 0), pTop = (0, -a), pLeft = (-b, 0)
-    // ด้านตรงข้ามมุมฉากวิ่งจาก pTop(0, -a) ไป pLeft(-b, 0) มีเวกเตอร์ (-b, a) ยาว c
-    // เวกเตอร์ตั้งฉากพุ่งออกด้านนอก (ขึ้น-ซ้าย) เพื่อไม่ให้ทับพื้นที่ a และ b คือ (-a, -b)
+    // มุมฉากอยู่ที่ (0, 0) ในหน่วยความยาวด้าน
+    // ด้านตั้ง a อยู่ด้านบนจาก (0, 0) ไป (0, -a) -> สี่เหลี่ยมสีเขียวอยู่ทางขวา [0..a, -a..0]
+    // ด้านนอน b อยู่ด้านซ้ายจาก (0, 0) ไป (-b, 0) -> สี่เหลี่ยมสีส้มอยู่ด้านล่าง [-b..0, 0..b]
+    // ด้านตรงข้ามมุมฉาก c จาก (0, -a) ไป (-b, 0) -> สี่เหลี่ยมสีแดงกางออกด้านบนซ้าย (ไม่ทับ a และ b)
     var ux = -b / c;
     var uy = a / c;
     var nx = -a / c;
     var ny = -b / c;
 
-    var c0x = 0, c0y = -a;
-    var c1x = c0x + c * ux, c1y = c0y + c * uy;
-    var c2x = c1x + c * nx, c2y = c1y + c * ny;
-    var c3x = c0x + c * nx, c3y = c0y + c * ny;
+    var pts = [
+      { x: -b, y: 0 },
+      { x: 0, y: 0 },
+      { x: 0, y: -a },
+      { x: a, y: -a },
+      { x: a, y: 0 },
+      { x: -b, y: b },
+      { x: 0, y: b },
+      { x: -b * ux + c * nx, y: -a * uy + c * ny },
+      { x: c * nx, y: -a + c * ny }
+    ];
 
-    var minX = Math.min(-b, c0x, c1x, c2x, c3x);
-    var maxX = Math.max(a, c0x, c1x, c2x, c3x);
-    var minY = Math.min(-a, c0y, c1y, c2y, c3y);
-    var maxY = Math.max(b, c0y, c1y, c2y, c3y);
+    var minX = pts[0].x, maxX = pts[0].x, minY = pts[0].y, maxY = pts[0].y;
+    for (var i = 1; i < pts.length; i++) {
+      if (pts[i].x < minX) minX = pts[i].x;
+      if (pts[i].x > maxX) maxX = pts[i].x;
+      if (pts[i].y < minY) minY = pts[i].y;
+      if (pts[i].y > maxY) maxY = pts[i].y;
+    }
 
-    var wUnits = Math.max(1, maxX - minX);
-    var hUnits = Math.max(1, maxY - minY);
+    var spanX = Math.max(1, maxX - minX);
+    var spanY = Math.max(1, maxY - minY);
     var pad = 28;
-    // ลดสัดส่วนลงเหลือ 0.72 เพื่อให้สี่เหลี่ยมดูโปร่งขึ้น ไม่เบียดกัน
-    var scale = Math.min((canvas.width - pad * 2) / wUnits, (canvas.height - pad * 2) / hUnits) * 0.72;
+    var scale = Math.min((W - pad * 2) / spanX, (H - pad * 2) / spanY) * 0.75;
+    if (!scale || scale <= 0) scale = 12;
 
-    var ox = pad + ((canvas.width - pad * 2) - wUnits * scale) / 2 - minX * scale;
-    var oy = pad + ((canvas.height - pad * 2) - hUnits * scale) / 2 - minY * scale;
+    var ox = pad + ((W - pad * 2) - spanX * scale) / 2 - minX * scale;
+    var oy = pad + ((H - pad * 2) - spanY * scale) / 2 - minY * scale;
 
-    var pRight = { x: ox, y: oy };
-    var pTop = { x: ox, y: oy - a * scale };
-    var pLeft = { x: ox - b * scale, y: oy };
-
-    // 1. สี่เหลี่ยมบนด้าน a (สีเขียว ทางขวาของด้านตั้ง)
+    // 1. สี่เหลี่ยมสีเขียวบนด้าน a
     ctx.fillStyle = '#2e8555';
-    ctx.fillRect(pTop.x, pTop.y, a * scale, a * scale);
+    ctx.fillRect(ox, oy - a * scale, a * scale, a * scale);
     ctx.strokeStyle = '#a7f3d0';
     ctx.lineWidth = 2;
-    ctx.strokeRect(pTop.x, pTop.y, a * scale, a * scale);
+    ctx.strokeRect(ox, oy - a * scale, a * scale, a * scale);
 
-    // 2. สี่เหลี่ยมบนด้าน b (สีส้มน้ำตาล ด้านล่างของด้านนอน)
+    // 2. สี่เหลี่ยมสีส้มบนด้าน b
     ctx.fillStyle = '#c67d2a';
-    ctx.fillRect(pLeft.x, pLeft.y, b * scale, b * scale);
+    ctx.fillRect(ox - b * scale, oy, b * scale, b * scale);
     ctx.strokeStyle = '#fde68a';
     ctx.lineWidth = 2;
-    ctx.strokeRect(pLeft.x, pLeft.y, b * scale, b * scale);
+    ctx.strokeRect(ox - b * scale, oy, b * scale, b * scale);
 
-    // 3. สี่เหลี่ยมบนด้าน c (สีแดง กางออกด้านบนซ้าย ไม่ซ้อนกับ a และ b)
+    // 3. สี่เหลี่ยมสีแดงบนด้าน c (กางขึ้นด้านบนซ้าย แยกชัดเจน)
+    var c0x = ox;
+    var c0y = oy - a * scale;
+    var c1x = ox - b * scale;
+    var c1y = oy;
+    var c2x = c1x + c * nx * scale;
+    var c2y = c1y + c * ny * scale;
+    var c3x = c0x + c * nx * scale;
+    var c3y = c0y + c * ny * scale;
+
     ctx.beginPath();
-    ctx.moveTo(ox + c0x * scale, oy + c0y * scale);
-    ctx.lineTo(ox + c1x * scale, oy + c1y * scale);
-    ctx.lineTo(ox + c2x * scale, oy + c2y * scale);
-    ctx.lineTo(ox + c3x * scale, oy + c3y * scale);
+    ctx.moveTo(c0x, c0y);
+    ctx.lineTo(c1x, c1y);
+    ctx.lineTo(c2x, c2y);
+    ctx.lineTo(c3x, c3y);
     ctx.closePath();
     ctx.fillStyle = '#c83e37';
     ctx.fill();
@@ -482,9 +487,9 @@
 
     // 4. รูปสามเหลี่ยมมุมฉากด้านใน
     ctx.beginPath();
-    ctx.moveTo(pLeft.x, pLeft.y);
-    ctx.lineTo(pRight.x, pRight.y);
-    ctx.lineTo(pTop.x, pTop.y);
+    ctx.moveTo(ox - b * scale, oy);
+    ctx.lineTo(ox, oy);
+    ctx.lineTo(ox, oy - a * scale);
     ctx.closePath();
     ctx.fillStyle = '#262f3d';
     ctx.fill();
@@ -492,39 +497,38 @@
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    // สัญลักษณ์มุมฉาก
-    var sq = Math.max(8, Math.min(13, scale * 0.45));
+    // มุมฉาก
+    var sq = Math.max(7, Math.min(12, scale * 0.42));
     ctx.strokeStyle = '#f8fafc';
     ctx.lineWidth = 1.6;
-    ctx.strokeRect(pRight.x - sq, pRight.y - sq, sq, sq);
+    ctx.strokeRect(ox - sq, oy - sq, sq, sq);
 
-    // 5. ตัวเลขกำกับในแต่ละสี่เหลี่ยม
+    // 5. ตัวเลขในสี่เหลี่ยมทั้งสาม
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
+    var fSize = Math.max(11, Math.min(19, scale * 0.52));
+    ctx.font = 'bold ' + fSize + 'px sans-serif';
 
-    var fontSize = Math.max(11, Math.min(20, scale * 0.55));
-    ctx.font = 'bold ' + fontSize + 'px sans-serif';
-
-    var axCenter = pTop.x + (a * scale) / 2;
-    var ayCenter = pTop.y + (a * scale) / 2;
-    if (a * scale >= 32) {
-      ctx.fillText('a = ' + a, axCenter, ayCenter - fontSize * 0.65);
-      ctx.fillText('a² = ' + areaA, axCenter, ayCenter + fontSize * 0.65);
+    if (a * scale >= 30) {
+      var ax = ox + (a * scale) / 2;
+      var ay = oy - (a * scale) / 2;
+      ctx.fillText('a = ' + a, ax, ay - fSize * 0.65);
+      ctx.fillText('a² = ' + areaA, ax, ay + fSize * 0.65);
     }
 
-    var bxCenter = pLeft.x + (b * scale) / 2;
-    var byCenter = pLeft.y + (b * scale) / 2;
-    if (b * scale >= 32) {
-      ctx.fillText('b = ' + b, bxCenter, byCenter - fontSize * 0.65);
-      ctx.fillText('b² = ' + areaB, bxCenter, byCenter + fontSize * 0.65);
+    if (b * scale >= 30) {
+      var bx = ox - (b * scale) / 2;
+      var by = oy + (b * scale) / 2;
+      ctx.fillText('b = ' + b, bx, by - fSize * 0.65);
+      ctx.fillText('b² = ' + areaB, bx, by + fSize * 0.65);
     }
 
-    var cxCenter = ox + ((c0x + c2x) / 2) * scale;
-    var cyCenter = oy + ((c0y + c2y) / 2) * scale;
-    if (c * scale >= 38) {
-      ctx.fillText('c = ' + cText, cxCenter, cyCenter - fontSize * 0.65);
-      ctx.fillText('c² = ' + areaC, cxCenter, cyCenter + fontSize * 0.65);
+    if (c * scale >= 36) {
+      var cx = (c0x + c2x) / 2;
+      var cy = (c0y + c2y) / 2;
+      ctx.fillText('c = ' + cText, cx, cy - fSize * 0.65);
+      ctx.fillText('c² = ' + areaC, cx, cy + fSize * 0.65);
     }
   }
 
@@ -570,4 +574,106 @@
     },
     {
       q: "5. สมมติมีบันไดพาดกำแพงเกิดเป็นสามเหลี่ยมมุมฉาก โดยมีระยะห่างจากกำแพง a = 5 เมตร และความสูงบนกำแพง b = 12 เมตร พื้นที่กำลังสองของความยาวบันได (c²) คือเท่าไร",
-      opts: ["17",
+      opts: ["17", "60", "119", "169"],
+      ans: 3,
+      exp: "นำพื้นที่ของทั้งสองด้านมาบวกกัน: 5² + 12² = 25 + 144 = 169 (ซึ่งความยาวบันได c คือ 13 เมตร เพราะ 13 × 13 = 169)"
+    }
+  ];
+
+  var userPicked = [null, null, null, null, null];
+  var submitted = false;
+  var choiceLetters = ["ก", "ข", "ค", "ง"];
+
+  function renderQuiz() {
+    var box = document.getElementById('quizList');
+    box.innerHTML = '';
+    for (var i = 0; i < quizData.length; i++) {
+      var item = quizData[i];
+      var card = document.createElement('div');
+      card.className = 'q-card';
+      card.id = 'qCard_' + i;
+
+      var optsHtml = '';
+      for (var j = 0; j < item.opts.length; j++) {
+        optsHtml +=
+          '<div class="opt" id="opt_' + i + '_' + j + '" onclick="pickAnswer(' + i + ', ' + j + ')">' +
+            '<strong>' + choiceLetters[j] + '.</strong>' +
+            '<span>' + item.opts[j] + '</span>' +
+          '</div>';
+      }
+
+      card.innerHTML =
+        '<p class="q-title">' + item.q + '</p>' +
+        optsHtml +
+        '<div class="exp-box" id="exp_' + i + '">💡 <strong>แนวคิด:</strong> ' + item.exp + '</div>';
+
+      box.appendChild(card);
+    }
+  }
+
+  function pickAnswer(qIdx, oIdx) {
+    if (submitted) return;
+    userPicked[qIdx] = oIdx;
+    for (var j = 0; j < 4; j++) {
+      var el = document.getElementById('opt_' + qIdx + '_' + j);
+      el.className = 'opt' + (j === oIdx ? ' picked' : '');
+    }
+  }
+
+  function gradeQuiz() {
+    var missing = userPicked.indexOf(null);
+    if (missing !== -1) {
+      alert('คุณยังเลือกคำตอบไม่ครบครับ กรุณาทำข้อที่ ' + (missing + 1) + ' ก่อนกดส่งคำตอบ');
+      var target = document.getElementById('qCard_' + missing);
+      if (target && target.scrollIntoView) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    submitted = true;
+    var score = 0;
+
+    for (var i = 0; i < quizData.length; i++) {
+      var item = quizData[i];
+      var card = document.getElementById('qCard_' + i);
+      document.getElementById('exp_' + i).style.display = 'block';
+
+      if (userPicked[i] === item.ans) {
+        score++;
+        card.className = 'q-card ok';
+        document.getElementById('opt_' + i + '_' + userPicked[i]).className = 'opt right-ans';
+      } else {
+        card.className = 'q-card bad';
+        document.getElementById('opt_' + i + '_' + userPicked[i]).className = 'opt wrong-ans';
+        document.getElementById('opt_' + i + '_' + item.ans).className = 'opt right-ans';
+      }
+    }
+
+    document.getElementById('submitBtn').style.display = 'none';
+    document.getElementById('scoreCard').style.display = 'block';
+    document.getElementById('scoreNum').textContent = score + ' / 5';
+    document.getElementById('scoreMsg').textContent =
+      score >= 4 ? 'ยอดเยี่ยมมาก! เข้าใจความสัมพันธ์ของพื้นที่พีทาโกรัสได้ชัดเจนแล้ว' :
+      score >= 3 ? 'ดีมาก! ลองอ่านกรอบ 💡 แนวคิดในข้อที่ผิดเพื่อทบทวนเพิ่มเติมนะ' :
+      'ลองอ่านกรอบ 💡 แนวคิดด้านล่าง แล้วกลับไปเลื่อนแถบ a และ b ดูภาพอีกรอบนะ';
+
+    window.scrollTo(0, 0);
+  }
+
+  function resetQuiz() {
+    userPicked = [null, null, null, null, null];
+    submitted = false;
+    document.getElementById('scoreCard').style.display = 'none';
+    document.getElementById('submitBtn').style.display = 'block';
+    renderQuiz();
+    window.scrollTo(0, 0);
+  }
+
+  // เรียกวาดทันทีทั้งตอน DOM พร้อมและตอน window โหลดเสร็จ เพื่อกันการค้างบนมือถือ
+  onSliderInput(true);
+  renderQuiz();
+  window.onload = function() {
+    drawDiagram();
+  };
+</script>
+</body>
+</html>
