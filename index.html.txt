@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>สื่อสำรวจพื้นที่ พีทาโกรัส (ต่อจิ๊กซอว์)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #f4f7fb;
+      --card-bg: #ffffff;
+      --color-a: #3b82f6;      /* สีฟ้า: ด้านสั้น */
+      --color-a-light: #dbeafe;
+      --color-b: #f59e0b;      /* สีเหลืองส้ม: ด้านกลาง */
+      --color-b-light: #fef3c7;
+      --color-c: #ef4444;      /* สีแดง: ด้านพี่ใหญ่ */
+      --color-c-light: #fee2e2;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      padding: 12px;
+      font-family: 'Prompt', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+      background: var(--card-bg);
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+      padding: 16px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: 1.25rem;
+      margin: 0 0 4px 0;
+      color: #0f172a;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    /* แถบเลือกชุดตัวเลข */
+    .preset-group {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    .preset-btn {
+      flex: 1;
+      padding: 8px 10px;
+      border: 2px solid #e2e8f0;
+      background: #f8fafc;
+      border-radius: 12px;
+      font-family: 'Prompt', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .preset-btn.active {
+      border-color: #2563eb;
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    /* พื้นที่วาดภาพ (Canvas) */
+    .canvas-wrapper {
+      position: relative;
+      width: 100%;
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 12px;
+      touch-action: manipulation;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .hint-badge {
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.8);
+      color: #fff;
+      font-size: 0.78rem;
+      padding: 4px 12px;
+      border-radius: 999px;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    /* กล่องสรุปตัวเลขพื้นที่ */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .stat-box {
+      padding: 8px 4px;
+      border-radius: 12px;
+      border: 2px solid transparent;
+    }
+
+    .stat-box.a { background: var(--color-a-light); border-color: var(--color-a); }
+    .stat-box.b { background: var(--color-b-light); border-color: var(--color-b); }
+    .stat-box.c { background: var(--color-c-light); border-color: var(--color-c); }
+
+    .stat-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      display: block;
+    }
+
+    .stat-value {
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .operator {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    /* ปุ่มควบคุมการย้ายชิ้นส่วน */
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .action-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .btn {
+      padding: 12px;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.1s, opacity 0.2s;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn-primary {
+      background: #10b981;
+      color: white;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-reset {
+      background: #e2e8f0;
+      color: #334155;
+    }
+
+    .slider-container {
+      background: #f1f5f9;
+      padding: 10px 14px;
+      border-radius: 12px;
+    }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: #10b981;
+      height: 8px;
+      cursor: pointer;
+    }
+
+    /* ข้อความแสดงความยินดีเมื่อต่อครบ */
+    .success-banner {
+      display: none;
+      margin-top: 12px;
+      padding: 12px;
+      background: #ecfdf5;
+      border: 2px solid #10b981;
+      border-radius: 12px;
+      text-align: center;
+      color: #065f46;
+      font-size: 0.9rem;
+      font-weight: 600;
+      animation: popIn 0.3s ease;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.9); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>🧩 สำรวจพื้นที่สามเหลี่ยมมุมฉาก</h1>
+      <p class="subtitle">ลองย้ายช่องกระเบื้องสีฟ้าและสีเหลือง ไปเติมในกรอบพี่ใหญ่ (สีแดง)</p>
+    </header>
+
+    <!-- ปุ่มเลือกชุดตัวเลข -->
+    <div class="preset-group">
+      <button class="preset-btn active" onclick="setTriangle(3, 4, this)">ชุดที่ 1: ด้าน 3 - 4 - 5</button>
+      <button class="preset-btn" onclick="setTriangle(6, 8, this)">ชุดที่ 2: ด้าน 6 - 8 - 10</button>
+    </div>
+
+    <!-- หน้าจอแสดงภาพ -->
+    <div class="canvas-wrapper">
+      <div class="hint-badge" id="hintText">แตะที่หน้าจอ หรือเลื่อนแถบด้านล่างเพื่อย้ายช่อง</div>
+      <canvas id="pythaCanvas" width="500" height="460"></canvas>
+    </div>
+
+    <!-- กล่องสรุปจำนวนช่อง -->
+    <div class="stats-grid">
+      <div class="stat-box a">
+        <span class="stat-label" style="color:#1d4ed8;">ด้านสั้น (<span id="lenA">3</span>)</span>
+        <span class="stat-value" id="areaA">9 ช่อง</span>
+      </div>
+      <div class="operator">+</div>
+      <div class="stat-box b">
+        <span class="stat-label" style="color:#b45309;">ด้านกลาง (<span id="lenB">4</span>)</span>
+        <span class="stat-value" id="areaB">16 ช่อง</span>
+      </div>
+      <div class="operator">=</div>
+      <div class="stat-box c">
+        <span class="stat-label" style="color:#b91c1c;">พี่ใหญ่ (<span id="lenC">5</span>)</span>
+        <span class="stat-value"><span id="filledCount">0</span> / <span id="areaC">25</span></span>
+      </div>
+    </div>
+
+    <!-- แผงควบคุม -->
+    <div class="controls">
+      <div class="slider-container">
+        <div class="slider-header">
+          <span>เลื่อนย้ายชิ้นส่วนจิ๊กซอว์</span>
+          <span id="percentText">0%</span>
+        </div>
+        <input type="range" id="progressSlider" min="0" max="100" value="0" oninput="onSliderChange(this.value)" />
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn btn-reset" onclick="resetPuzzle()">🔄 เริ่มใหม่</button>
+        <button class="btn btn-primary" onclick="animateFill()">✨ ย้ายอัตโนมัติ</button>
+      </div>
+    </div>
+
+    <!-- กล่องสรุปผลเมื่อต่อเต็ม -->
+    <div class="success-banner" id="successBanner">
+      🎉 เต็มกรอบพอดีเป๊ะ! <br>
+      <span id="summaryFormula">9 + 16 = 25 ช่อง (3² + 4² = 5²)</span>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('pythaCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let sideA = 3;
+    let sideB = 4;
+    let sideC = 5;
+    let tiles = [];
+    let progress = 0; // 0 ถึง 1
+    let animId = null;
+
+    // ตั้งค่าชุดสามเหลี่ยม
+    function setTriangle(a, b, btn) {
+      if (btn) {
+        document.querySelectorAll('.preset-btn').forEach(el => el.classList.remove('active'));
+        btn.classList.add('active');
+      }
+      sideA = a;
+      sideB = b;
+      sideC = Math.round(Math.sqrt(a * a + b * b));
+
+      document.getElementById('lenA').innerText = sideA;
+      document.getElementById('lenB').innerText = sideB;
+      document.getElementById('lenC').innerText = sideC;
+      document.getElementById('areaA').innerText = (sideA * sideA) + ' ช่อง';
+      document.getElementById('areaB').innerText = (sideB * sideB) + ' ช่อง';
+      document.getElementById('areaC').innerText = (sideC * sideC);
+      document.getElementById('summaryFormula').innerText =
+        `${sideA*sideA} + ${sideB*sideB} = ${sideC*sideC} ช่อง (${sideA}² + ${sideB}² = ${sideC}²)`;
+
+      resetPuzzle();
+    }
+
+    // สร้างตำแหน่งเริ่มต้นและปลายทางของช่องตารางแต่ละชิ้น
+    function buildTiles() {
+      tiles = [];
+      const scale = sideA === 3 ? 28 : 14; // ปรับขนาดช่องตามชุดตัวเลข
+      const originX = 185;
+      const originY = 250;
+
+      // พิกัดมุมทั้งสามของรูปสามเหลี่ยมมุมฉาก (มุมฉากอยู่ที่ originX, originY)
+      const pRight = { x: originX, y: originY };
+      const pTop = { x: originX, y: originY - sideA * scale };
+      const pBottomRight = { x: originX + sideB * scale, y: originY };
+
+      // 1. สร้างช่องตารางบนด้านสั้น (a) สีฟ้า (วางด้านซ้ายของสามเหลี่ยม)
+      let targetSlots = [];
+      // คำนวณช่องปลายทางบนด้านตรงข้ามมุมฉาก (c)
+      const dx = pBottomRight.x - pTop.x;
+      const dy = pBottomRight.y - pTop.y;
+      const len = Math.hypot(dx, dy);
+      const ux = dx / len; // เวกเตอร์ตามแนวด้าน c
+      const uy = dy / len;
+      const nx = uy;       // เวกเตอร์ตั้งฉากพุ่งออกด้านนอก
+      const ny = -ux;
+
+      for (let r = 0; r < sideC; r++) {
+        for (let c = 0; c < sideC; c++) {
+          targetSlots.push({
+            x: pTop.x + (c * scale) * ux + (r * scale) * nx,
+            y: pTop.y + (c * scale) * uy + (r * scale) * ny,
+            angle: Math.atan2(uy, ux)
+          });
+        }
+      }
+
+      let slotIndex = 0;
+
+      // ช่องจากด้าน a (สีฟ้า)
+      for (let r = 0; r < sideA; r++) {
+        for (let c = 0; c < sideA; c++) {
+          tiles.push({
+            startX: pTop.x - (sideA - c) * scale,
+            startY: pTop.y + r * scale,
+            startAngle: 0,
+            endX: targetSlots[slotIndex].x,
+            endY: targetSlots[slotIndex].y,
+            endAngle: targetSlots[slotIndex].angle,
+            size: scale,
+            color: '#3b82f6',
+            border: '#1d4ed8',
+            index: slotIndex
+          });
+          slotIndex++;
+        }
+      }
+
+      // ช่องจากด้าน b (สีเหลืองส้ม)
+      for (let r = 0; r < sideB; r++) {
+        for (let c = 0; c < sideB; c++) {
+          tiles.push({
+            startX: originX + c * scale,
+            startY: originY + r * scale,
+            startAngle: 0,
+            endX: targetSlots[slotIndex].x,
+            endY: targetSlots[slotIndex].y,
+            endAngle: targetSlots[slotIndex].angle,
+            size: scale,
+            color: '#f59e0b',
+            border: '#b45309',
+            index: slotIndex
+          });
+          slotIndex++;
+        }
+      }
+
+      return { pRight, pTop, pBottomRight, scale, ux, uy, nx, ny };
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const geom = buildTiles();
+      const { pRight, pTop, pBottomRight, scale, ux, uy, nx, ny } = geom;
+
+      // วาดกรอบช่องว่างต้นทาง (a และ b)
+      ctx.strokeStyle = '#93c5fd';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(pTop.x - sideA * scale, pTop.y, sideA * scale, sideA * scale);
+
+      ctx.strokeStyle = '#fcd34d';
+      ctx.strokeRect(pRight.x, pRight.y, sideB * scale, sideB * scale);
+
+      // วาดกรอบเป้าหมาย "ด้านพี่ใหญ่ (c)" สีแดง
+      ctx.save();
+      ctx.translate(pTop.x, pTop.y);
+      ctx.rotate(Math.atan2(uy, ux));
+      ctx.fillStyle = 'rgba(239, 68, 68, 0.08)';
+      ctx.fillRect(0, -sideC * scale, sideC * scale, sideC * scale);
+      ctx.strokeStyle = '#ef4444';
+      ctx.lineWidth = 2.5;
+      ctx.strokeRect(0, -sideC * scale, sideC * scale, sideC * scale);
+
+      // วาดเส้นตารางจาง ๆ ในกรอบพี่ใหญ่
+      ctx.strokeStyle = 'rgba(239, 68, 68, 0.25)';
+      ctx.lineWidth = 1;
+      for (let i = 1; i < sideC; i++) {
+        ctx.beginPath();
+        ctx.moveTo(i * scale, 0);
+        ctx.lineTo(i * scale, -sideC * scale);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(0, -i * scale);
+        ctx.lineTo(sideC * scale, -i * scale);
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // วาดรูปสามเหลี่ยมมุมฉากตรงกลาง
+      ctx.beginPath();
+      ctx.moveTo(pRight.x, pRight.y);
+      ctx.lineTo(pTop.x, pTop.y);
+      ctx.lineTo(pBottomRight.x, pBottomRight.y);
+      ctx.closePath();
+      ctx.fillStyle = '#e2e8f0';
+      ctx.fill();
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      // วาดสัญลักษณ์มุมฉากสีแดงชัดเจน
+      const boxSize = 16;
+      ctx.strokeStyle = '#ef4444';
+      ctx.lineWidth = 2.5;
+      ctx.strokeRect(pRight.x, pRight.y - boxSize, boxSize, boxSize);
+
+      // วาดชิ้นส่วนจิ๊กซอว์ทีละชิ้นตามค่า progress
+      const totalTiles = tiles.length;
+      let filled = 0;
+
+      tiles.forEach((t, idx) => {
+        // แบ่งจังหวะการเคลื่อนที่ให้ทยอยเรียงเข้าไปทีละชิ้นอย่างสวยงาม
+        const stepStart = (idx / totalTiles) * 0.65;
+        const stepEnd = stepStart + 0.35;
+        let localP = (progress - stepStart) / (stepEnd - stepStart);
+        localP = Math.max(0, Math.min(1, localP));
+
+        // ฟังก์ชัน Ease-in-out
+        const ease = localP < 0.5 ? 2 * localP * localP : -1 + (4 - 2 * localP) * localP;
+
+        if (localP >= 0.95) filled++;
+
+        const curX = t.startX + (t.endX - t.startX) * ease;
+        const curY = t.startY + (t.endY - t.startY) * ease;
+        const curAngle = t.startAngle + (t.endAngle - t.startAngle) * ease;
+
+        ctx.save();
+        ctx.translate(curX, curY);
+        ctx.rotate(curAngle);
+        ctx.fillStyle = t.color;
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 1.2;
+
+        // ชดเชยแกน Y เมื่อหมุนเข้าสู่กรอบด้าน c
+        const offsetY = localP > 0 ? -t.size * ease : 0;
+        ctx.fillRect(0, offsetY, t.size, t.size);
+        ctx.strokeRect(0, offsetY, t.size, t.size);
+        ctx.restore();
+      });
+
+      // ป้ายข้อความกำกับด้านพี่ใหญ่
+      ctx.save();
+      ctx.fillStyle = '#b91c1c';
+      ctx.font = 'bold 14px Prompt, sans-serif';
+      ctx.fillText('ด้านพี่ใหญ่ (ตรงข้ามมุมฉาก)', pTop.x + (sideC * scale * 0.35), pTop.y - 12);
+      ctx.restore();
+
+      // อัปเดตตัวเลขหน้าจอ
+      document.getElementById('filledCount').innerText = filled;
+      const banner = document.getElementById('successBanner');
+      if (filled === totalTiles) {
+        banner.style.display = 'block';
+        document.getElementById('hintText').innerText = 'ครบแล้ว! ลองสังเกตผลรวมช่องด้านล่าง';
+      } else {
+        banner.style.display = 'none';
+        document.getElementById('hintText').innerText = 'แตะที่หน้าจอ หรือเลื่อนแถบด้านล่างเพื่อย้ายช่อง';
+      }
+    }
+
+    function onSliderChange(val) {
+      cancelAnimationFrame(animId);
+      progress = val / 100;
+      document.getElementById('percentText').innerText = Math.round(val) + '%';
+      draw();
+    }
+
+    function resetPuzzle() {
+      cancelAnimationFrame(animId);
+      progress = 0;
+      document.getElementById('progressSlider').value = 0;
+      document.getElementById('percentText').innerText = '0%';
+      draw();
+    }
+
+    function animateFill() {
+      cancelAnimationFrame(animId);
+      if (progress >= 0.99) progress = 0;
+
+      function step() {
+        progress += 0.015;
+        if (progress >= 1) {
+          progress = 1;
+          document.getElementById('progressSlider').value = 100;
+          document.getElementById('percentText').innerText = '100%';
+          draw();
+          return;
+        }
+        document.getElementById('progressSlider').value = Math.round(progress * 100);
+        document.getElementById('percentText').innerText = Math.round(progress * 100) + '%';
+        draw();
+        animId = requestAnimationFrame(step);
+      }
+      animId = requestAnimationFrame(step);
+    }
+
+    // แตะที่รูปภาพเพื่อสลับย้าย/รีเซ็ตได้ทันทีบนมือถือ
+    canvas.addEventListener('click', () => {
+      if (progress < 1) {
+        animateFill();
+      } else {
+        resetPuzzle();
+      }
+    });
+
+    // เริ่มต้นวาดภาพชุดแรก
+    setTriangle(3, 4, null);
+  </script>
+</body>
+</html>
