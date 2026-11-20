@@ -2,35 +2,20 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>พื้นที่พีทาโกรัส: สำรวจ - ท้าทาย - แบบทดสอบ 5 ข้อ</title>
   <style>
-    :root {
-      --bg-outer: #0f172a;
-      --bg-card: #161b22;
-      --bg-panel: #1f2937;
-      --border: #334155;
-      --text: #f8fafc;
-      --muted: #94a3b8;
-      --a-main: #2e8555;
-      --a-soft: rgba(46, 133, 85, 0.25);
-      --b-main: #c67d2a;
-      --b-soft: rgba(198, 125, 42, 0.25);
-      --c-main: #c83e37;
-      --c-soft: rgba(200, 62, 55, 0.25);
-      --accent: #38bdf8;
-      --ok: #22c55e;
-      --bad: #ef4444;
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
-
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
     body {
       margin: 0;
       padding: 12px;
       font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans Thai", sans-serif;
-      background: var(--bg-outer);
-      color: var(--text);
+      background: #0f172a;
+      color: #f8fafc;
       display: flex;
       justify-content: center;
     }
@@ -38,15 +23,24 @@
     .app {
       width: 100%;
       max-width: 560px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
+      background: #161b22;
+      border: 1px solid #334155;
       border-radius: 18px;
       padding: 16px;
       box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
     }
 
-    h1 { font-size: 1.25rem; margin: 0 0 4px; }
-    .subtitle { font-size: 0.85rem; color: var(--muted); margin: 0 0 14px; line-height: 1.45; }
+    h1 {
+      font-size: 1.25rem;
+      margin: 0 0 4px;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin: 0 0 14px;
+      line-height: 1.45;
+    }
 
     .tabs {
       display: grid;
@@ -60,7 +54,7 @@
       border-radius: 10px;
       border: 1.5px solid #475569;
       background: #1e293b;
-      color: var(--text);
+      color: #f8fafc;
       font-family: inherit;
       font-size: 0.85rem;
       font-weight: 700;
@@ -68,17 +62,22 @@
     }
 
     .tab-btn.active {
-      background: #63967d;
+      background: #4d7c66;
       border-color: #bbf7d0;
       color: #ffffff;
     }
 
-    .section { display: none; }
-    .section.active { display: block; }
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
 
     .stage-box {
       background: #11161d;
-      border: 1px solid var(--border);
+      border: 1px solid #334155;
       border-radius: 14px;
       overflow: hidden;
       margin-bottom: 12px;
@@ -88,6 +87,7 @@
       display: block;
       width: 100%;
       height: auto;
+      background: #11161d;
     }
 
     .presets {
@@ -100,26 +100,26 @@
     .preset-btn {
       flex: 1 1 calc(33.333% - 6px);
       min-width: 88px;
-      padding: 7px 6px;
+      padding: 8px 6px;
       border-radius: 9px;
       border: 1px solid #475569;
       background: #1e293b;
       color: #e2e8f0;
       font-family: inherit;
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       font-weight: 700;
       cursor: pointer;
     }
 
     .preset-btn.active {
-      border-color: var(--accent);
-      background: rgba(56, 189, 248, 0.16);
+      border-color: #38bdf8;
+      background: rgba(56, 189, 248, 0.18);
       color: #7dd3fc;
     }
 
     .sliders-panel {
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
+      background: #1f2937;
+      border: 1px solid #334155;
       border-radius: 12px;
       padding: 12px;
       margin-bottom: 12px;
@@ -134,14 +134,16 @@
       font-weight: 700;
     }
 
-    .slider-row:last-child { margin-bottom: 0; }
+    .slider-row:last-child {
+      margin-bottom: 0;
+    }
+
     .slider-row.a-lbl { color: #6ee7b7; }
     .slider-row.b-lbl { color: #fbbf24; }
 
     input[type="range"] {
       width: 100%;
       cursor: pointer;
-      accent-color: #cbd5e1;
     }
 
     .area-cards {
@@ -157,12 +159,32 @@
       border: 1px solid transparent;
     }
 
-    .area-card.a { background: var(--a-soft); border-color: var(--a-main); }
-    .area-card.b { background: var(--b-soft); border-color: var(--b-main); }
-    .area-card.c { background: var(--c-soft); border-color: var(--c-main); }
+    .area-card.a {
+      background: rgba(46, 133, 85, 0.25);
+      border-color: #2e8555;
+    }
 
-    .area-card .title { font-size: 0.78rem; color: #e2e8f0; margin-bottom: 4px; }
-    .area-card .val { font-size: 1.05rem; font-weight: 700; color: #ffffff; }
+    .area-card.b {
+      background: rgba(198, 125, 42, 0.25);
+      border-color: #c67d2a;
+    }
+
+    .area-card.c {
+      background: rgba(200, 62, 55, 0.25);
+      border-color: #c83e37;
+    }
+
+    .area-card .title {
+      font-size: 0.78rem;
+      color: #e2e8f0;
+      margin-bottom: 4px;
+    }
+
+    .area-card .val {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
 
     .formula-bar {
       text-align: center;
@@ -170,21 +192,21 @@
       font-weight: 700;
       color: #86efac;
       padding: 8px;
-      background: rgba(15, 23, 42, 0.65);
+      background: rgba(15, 23, 42, 0.7);
       border-radius: 10px;
       margin-bottom: 10px;
     }
 
     .tip-line {
       font-size: 0.8rem;
-      color: var(--muted);
+      color: #94a3b8;
       text-align: center;
       margin-bottom: 12px;
     }
 
     .challenge-panel {
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
+      background: #1f2937;
+      border: 1px solid #334155;
       border-radius: 14px;
       padding: 14px;
       margin-bottom: 12px;
@@ -217,7 +239,6 @@
       font-size: 1.05rem;
       font-weight: 700;
       text-align: center;
-      outline: none;
     }
 
     .btn-check {
@@ -270,7 +291,7 @@
       justify-content: space-between;
       align-items: center;
       font-size: 0.86rem;
-      color: var(--muted);
+      color: #94a3b8;
       font-weight: 700;
       padding-top: 4px;
     }
@@ -295,9 +316,23 @@
       cursor: pointer;
     }
 
-    .btn-jump { background: #16a34a; color: #ffffff; margin-top: 8px; }
-    .btn-submit { background: #2563eb; color: #ffffff; margin-top: 8px; }
-    .btn-reset { background: #334155; color: #f8fafc; margin-top: 8px; }
+    .btn-jump {
+      background: #16a34a;
+      color: #ffffff;
+      margin-top: 8px;
+    }
+
+    .btn-submit {
+      background: #2563eb;
+      color: #ffffff;
+      margin-top: 8px;
+    }
+
+    .btn-reset {
+      background: #334155;
+      color: #f8fafc;
+      margin-top: 8px;
+    }
 
     .q-card {
       background: #1e293b;
@@ -307,10 +342,22 @@
       margin-bottom: 10px;
     }
 
-    .q-card.ok { border-color: var(--ok); background: rgba(34, 197, 94, 0.12); }
-    .q-card.bad { border-color: var(--bad); background: rgba(239, 68, 68, 0.12); }
+    .q-card.ok {
+      border-color: #22c55e;
+      background: rgba(34, 197, 94, 0.12);
+    }
 
-    .q-title { font-size: 0.92rem; font-weight: 700; margin: 0 0 8px; line-height: 1.45; }
+    .q-card.bad {
+      border-color: #ef4444;
+      background: rgba(239, 68, 68, 0.12);
+    }
+
+    .q-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin: 0 0 8px;
+      line-height: 1.45;
+    }
 
     .opt {
       display: flex;
@@ -325,9 +372,24 @@
       cursor: pointer;
     }
 
-    .opt.picked { border-color: var(--accent); background: rgba(56, 189, 248, 0.18); font-weight: 700; }
-    .opt.right-ans { border-color: var(--ok); background: rgba(34, 197, 94, 0.25); color: #bbf7d0; font-weight: 700; }
-    .opt.wrong-ans { border-color: var(--bad); background: rgba(239, 68, 68, 0.25); color: #fecaca; }
+    .opt.picked {
+      border-color: #38bdf8;
+      background: rgba(56, 189, 248, 0.18);
+      font-weight: 700;
+    }
+
+    .opt.right-ans {
+      border-color: #22c55e;
+      background: rgba(34, 197, 94, 0.25);
+      color: #bbf7d0;
+      font-weight: 700;
+    }
+
+    .opt.wrong-ans {
+      border-color: #ef4444;
+      background: rgba(239, 68, 68, 0.25);
+      color: #fecaca;
+    }
 
     .exp-box {
       display: none;
@@ -335,7 +397,7 @@
       padding: 9px 11px;
       border-radius: 8px;
       background: #0f172a;
-      border-left: 4px solid var(--accent);
+      border-left: 4px solid #38bdf8;
       font-size: 0.83rem;
       line-height: 1.45;
       color: #e2e8f0;
@@ -351,7 +413,12 @@
       margin-bottom: 12px;
     }
 
-    .score-num { font-size: 1.9rem; font-weight: 700; color: #7dd3fc; margin: 4px 0; }
+    .score-num {
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: #7dd3fc;
+      margin: 4px 0;
+    }
   </style>
 </head>
 <body>
@@ -360,34 +427,35 @@
   <p class="subtitle">สี่เหลี่ยมจัตุรัสที่สร้างบนแต่ละด้านของรูปสามเหลี่ยมมุมฉาก มีความสัมพันธ์กันอย่างไร</p>
 
   <div class="tabs">
-    <button type="button" class="tab-btn active" id="tabExploreBtn" onclick="switchTab('explore')">สำรวจ</button>
-    <button type="button" class="tab-btn" id="tabChallengeBtn" onclick="switchTab('challenge')">ท้าทาย</button>
-    <button type="button" class="tab-btn" id="tabQuizBtn" onclick="switchTab('quiz')">แบบทดสอบ 5 ข้อ</button>
+    <button type="button" class="tab-btn active" id="tabExploreBtn">สำรวจ</button>
+    <button type="button" class="tab-btn" id="tabChallengeBtn">ท้าทาย</button>
+    <button type="button" class="tab-btn" id="tabQuizBtn">แบบทดสอบ 5 ข้อ</button>
   </div>
 
+  <!-- โหมดสำรวจ -->
   <div class="section active" id="exploreSection">
     <div class="stage-box">
-      <canvas id="exploreCanvas" width="520" height="430"></canvas>
+      <canvas id="exploreCanvas" width="520" height="420"></canvas>
     </div>
 
     <div class="presets">
-      <button type="button" class="preset-btn active" id="pre0" onclick="applyPreset(3, 4, 0)">3 - 4 - 5</button>
-      <button type="button" class="preset-btn" id="pre1" onclick="applyPreset(5, 12, 1)">5 - 12 - 13</button>
-      <button type="button" class="preset-btn" id="pre2" onclick="applyPreset(6, 8, 2)">6 - 8 - 10</button>
-      <button type="button" class="preset-btn" id="pre3" onclick="applyPreset(7, 24, 3)">7 - 24 - 25</button>
-      <button type="button" class="preset-btn" id="pre4" onclick="applyPreset(8, 15, 4)">8 - 15 - 17</button>
-      <button type="button" class="preset-btn" id="pre5" onclick="clearPresetHighlight()">ปรับเอง</button>
+      <button type="button" class="preset-btn active" id="pre0">3 - 4 - 5</button>
+      <button type="button" class="preset-btn" id="pre1">5 - 12 - 13</button>
+      <button type="button" class="preset-btn" id="pre2">6 - 8 - 10</button>
+      <button type="button" class="preset-btn" id="pre3">7 - 24 - 25</button>
+      <button type="button" class="preset-btn" id="pre4">8 - 15 - 17</button>
+      <button type="button" class="preset-btn" id="pre5">ปรับเอง</button>
     </div>
 
     <div class="sliders-panel">
       <div class="slider-row a-lbl">
         <span>a</span>
-        <input type="range" id="sliderA" min="1" max="15" value="3" oninput="onSliderInput()" />
+        <input type="range" id="sliderA" min="1" max="15" value="3" />
         <span id="valA">3</span>
       </div>
       <div class="slider-row b-lbl">
         <span>b</span>
-        <input type="range" id="sliderB" min="1" max="15" value="4" oninput="onSliderInput()" />
+        <input type="range" id="sliderB" min="1" max="15" value="4" />
         <span id="valB">4</span>
       </div>
     </div>
@@ -412,13 +480,14 @@
 
     <div class="jump-box">
       <div>สำรวจความสัมพันธ์เข้าใจแล้ว ลองฝึกคิดเลขในโหมดท้าทายกันเลย!</div>
-      <button type="button" class="btn btn-jump" onclick="switchTab('challenge')">ไปฝึกโหมดท้าทายต่อเลย ➡️</button>
+      <button type="button" class="btn btn-jump" id="goChallengeBtn">ไปฝึกโหมดท้าทายต่อเลย ➡️</button>
     </div>
   </div>
 
+  <!-- โหมดท้าทาย -->
   <div class="section" id="challengeSection">
     <div class="stage-box">
-      <canvas id="challengeCanvas" width="520" height="430"></canvas>
+      <canvas id="challengeCanvas" width="520" height="420"></canvas>
     </div>
 
     <div class="challenge-panel">
@@ -426,8 +495,8 @@
 
       <div class="challenge-controls">
         <input type="number" inputmode="numeric" class="challenge-input" id="challengeInput" placeholder="คำตอบ..." />
-        <button type="button" class="btn-check" onclick="checkChallenge()">ตรวจคำตอบ</button>
-        <button type="button" class="btn-next" onclick="nextChallenge()">ข้อต่อไป</button>
+        <button type="button" class="btn-check" id="checkChallengeBtn">ตรวจคำตอบ</button>
+        <button type="button" class="btn-next" id="nextChallengeBtn">ข้อต่อไป</button>
       </div>
 
       <div class="challenge-feedback" id="challengeFeedback"></div>
@@ -440,67 +509,432 @@
 
     <div class="jump-box">
       <div>ฝึกท้าทายคล่องแล้ว พร้อมวัดระดับความเข้าใจหรือยัง?</div>
-      <button type="button" class="btn btn-jump" onclick="switchTab('quiz')">ไปทำแบบทดสอบ 5 ข้อต่อเลย ➡️</button>
+      <button type="button" class="btn btn-jump" id="goQuizBtn">ไปทำแบบทดสอบ 5 ข้อต่อเลย ➡️</button>
     </div>
   </div>
 
+  <!-- โหมดแบบทดสอบ 5 ข้อ -->
   <div class="section" id="quizSection">
     <div class="score-card" id="scoreCard">
       <div>คะแนนของคุณ</div>
       <div class="score-num" id="scoreNum">0 / 5</div>
       <div id="scoreMsg" style="font-weight:700;"></div>
-      <button type="button" class="btn btn-reset" onclick="resetQuiz()">🔄 ทำแบบทดสอบใหม่อีกครั้ง</button>
+      <button type="button" class="btn btn-reset" id="resetQuizBtn">🔄 ทำแบบทดสอบใหม่อีกครั้ง</button>
     </div>
 
     <div id="quizList"></div>
-    <button type="button" class="btn btn-submit" id="submitBtn" onclick="gradeQuiz()">✅ ส่งคำตอบ</button>
+    <button type="button" class="btn btn-submit" id="submitQuizBtn">✅ ส่งคำตอบ</button>
   </div>
 </div>
 
 <script>
-  var sideA = 3;
-  var sideB = 4;
+(function () {
+  var state = {
+    a: 3,
+    b: 4,
+    chIndex: 0,
+    chCorrect: 0,
+    chAttempted: 0,
+    chSolved: false,
+    userPicked: [null, null, null, null, null],
+    submitted: false
+  };
 
-  function renderPythagorasCanvas(canvasId, a, b, hideTarget) {
-    var canvas = document.getElementById(canvasId);
-    if (!canvas || !canvas.getContext) return;
-    var ctx = canvas.getContext('2d');
+  var challenges = [
+    { a: 6, b: 8, hide: "b", ans: 8, prompt: "จงหาความยาวของ ด้านประกอบมุมฉาก b จากค่าที่ปรากฏในรูป", hint: "100 - 36 = 64 และ 8 × 8 = 64 ดังนั้น b = 8" },
+    { a: 3, b: 4, hide: "c", ans: 5, prompt: "จงหาความยาวของ ด้านตรงข้ามมุมฉาก c จากค่าที่ปรากฏในรูป", hint: "9 + 16 = 25 และ 5 × 5 = 25 ดังนั้น c = 5" },
+    { a: 5, b: 12, hide: "a", ans: 5, prompt: "จงหาความยาวของ ด้านประกอบมุมฉาก a จากค่าที่ปรากฏในรูป", hint: "169 - 144 = 25 และ 5 × 5 = 25 ดังนั้น a = 5" },
+    { a: 8, b: 15, hide: "c", ans: 17, prompt: "จงหาความยาวของ ด้านตรงข้ามมุมฉาก c จากค่าที่ปรากฏในรูป", hint: "64 + 225 = 289 และ 17 × 17 = 289 ดังนั้น c = 17" },
+    { a: 7, b: 24, hide: "b", ans: 24, prompt: "จงหาความยาวของ ด้านประกอบมุมฉาก b จากค่าที่ปรากฏในรูป", hint: "625 - 49 = 576 และ 24 × 24 = 576 ดังนั้น b = 24" },
+    { a: 9, b: 12, hide: "c", ans: 15, prompt: "จงหาความยาวของ ด้านตรงข้ามมุมฉาก c จากค่าที่ปรากฏในรูป", hint: "81 + 144 = 225 และ 15 × 15 = 225 ดังนั้น c = 15" }
+  ];
 
-    var W = canvas.width || 520;
-    var H = canvas.height || 430;
-    ctx.clearRect(0, 0, W, H);
+  var quizItems = [
+    {
+      q: "1. จากหน้าจอสำรวจ ถ้าเราปรับด้าน a = 3 และด้าน b = 4 พื้นที่ของสี่เหลี่ยมสีเขียวและสีส้มรวมกันได้เท่าไร",
+      opts: ["7", "12", "25", "49"],
+      ans: 2,
+      exp: "สี่เหลี่ยมบนด้าน a มีพื้นที่ 3² = 9 และด้าน b มีพื้นที่ 4² = 16 นำมาบวกกันจะได้ 9 + 16 = 25 พอดีกับพื้นที่สี่เหลี่ยมสีแดงบนด้าน c"
+    },
+    {
+      q: "2. สี่เหลี่ยมสีแดงบนด้าน c มีความสัมพันธ์กับสี่เหลี่ยมสีเขียว (a) และสีส้ม (b) อย่างไร",
+      opts: [
+        "พื้นที่สี่เหลี่ยมสีแดง เท่ากับ ผลบวกของพื้นที่สี่เหลี่ยมสีเขียวและสีส้ม",
+        "พื้นที่สี่เหลี่ยมสีแดง เท่ากับ ผลต่างของพื้นที่สี่เหลี่ยมสีเขียวและสีส้ม",
+        "ความยาวด้าน c เท่ากับ a + b เสมอ",
+        "พื้นที่สี่เหลี่ยมสีแดง จะน้อยกว่าสี่เหลี่ยมสีส้มเสมอ"
+      ],
+      ans: 0,
+      exp: "ในรูปสามเหลี่ยมมุมฉาก พื้นที่สี่เหลี่ยมบนด้านตรงข้ามมุมฉาก (สีแดง) จะเท่ากับพื้นที่สี่เหลี่ยมบนด้านประกอบมุมฉากสองด้านบวกกัน (a² + b² = c²)"
+    },
+    {
+      q: "3. จากโหมดท้าทาย ถ้าสี่เหลี่ยมสีแดงมีพื้นที่ c² = 100 และสี่เหลี่ยมสีเขียวมีพื้นที่ a² = 36 ด้าน b จะยาวเท่าไร",
+      opts: ["6", "8", "10", "64"],
+      ans: 1,
+      exp: "นำพื้นที่สี่เหลี่ยมใหญ่ลบพื้นที่ด้านที่รู้: 100 - 36 = 64 และเลขที่เหมือนกันคูณกันได้ 64 คือ 8 × 8 จึงได้ b = 8"
+    },
+    {
+      q: "4. ถ้าเราเลื่อนค่า a หรือ b ให้ยาวขึ้น จะเกิดอะไรขึ้นกับสี่เหลี่ยมบนด้าน c (สีแดง)",
+      opts: [
+        "เล็กลงเสมอ",
+        "ใหญ่ขึ้นตามไปด้วย เพราะพื้นที่เพิ่มขึ้น",
+        "ไม่เปลี่ยนแปลงเลย",
+        "หายไปจากหน้าจอ"
+      ],
+      ans: 1,
+      exp: "เมื่อด้าน a หรือ b ยาวขึ้น พื้นที่ของสี่เหลี่ยมด้านนั้นจะมากขึ้น ทำให้ผลรวมพื้นที่เพิ่มขึ้น สี่เหลี่ยมสีแดงบนด้าน c จึงขยายใหญ่ขึ้นตาม"
+    },
+    {
+      q: "5. สมมติมีบันไดพาดกำแพงเกิดเป็นสามเหลี่ยมมุมฉาก โดยมีระยะห่างจากกำแพง a = 5 เมตร และความสูงบนกำแพง b = 12 เมตร บันไดยาวกี่เมตร",
+      opts: ["7 เมตร", "13 เมตร", "17 เมตร", "169 เมตร"],
+      ans: 1,
+      exp: "นำพื้นที่ของทั้งสองด้านมาบวกกัน: 5² + 12² = 25 + 144 = 169 และ 13 × 13 = 169 ดังนั้นบันไดยาว 13 เมตร"
+    }
+  ];
 
-    var c = Math.sqrt(a * a + b * b);
-    var areaA = a * a;
-    var areaB = b * b;
+  function drawShape(canvasId, a, b, hideTarget) {
+    try {
+      var canvas = document.getElementById(canvasId);
+      if (!canvas || !canvas.getContext) return;
+      var ctx = canvas.getContext("2d");
+      var w = canvas.width;
+      var h = canvas.height;
+
+      ctx.fillStyle = "#11161d";
+      ctx.fillRect(0, 0, w, h);
+
+      var c = Math.sqrt(a * a + b * b);
+      var areaA = a * a;
+      var areaB = b * b;
+      var areaC = areaA + areaB;
+      var cLabel = Math.abs(c - Math.round(c)) < 1e-9 ? String(Math.round(c)) : c.toFixed(1);
+
+      // เวกเตอร์ตั้งฉากพุ่งออกด้านบนซ้ายเพื่อไม่ให้ซ้อนทับสี่เหลี่ยม a และ b
+      var nx = -a / c;
+      var ny = -b / c;
+
+      var c0x = 0, c0y = -a;
+      var c1x = -b, c1y = 0;
+      var c2x = c1x + c * nx, c2y = c1y + c * ny;
+      var c3x = c0x + c * nx, c3y = c0y + c * ny;
+
+      var xs = [-b, 0, a, c0x, c1x, c2x, c3x];
+      var ys = [-a, 0, b, c0y, c1y, c2y, c3y];
+      var minX = Math.min.apply(null, xs);
+      var maxX = Math.max.apply(null, xs);
+      var minY = Math.min.apply(null, ys);
+      var maxY = Math.max.apply(null, ys);
+
+      var spanX = Math.max(1, maxX - minX);
+      var spanY = Math.max(1, maxY - minY);
+      var pad = 26;
+      var scale = Math.min((w - pad * 2) / spanX, (h - pad * 2) / spanY) * 0.74;
+
+      var ox = pad + ((w - pad * 2) - spanX * scale) / 2 - minX * scale;
+      var oy = pad + ((h - pad * 2) - spanY * scale) / 2 - minY * scale;
+
+      // สี่เหลี่ยมสีเขียวบนด้าน a
+      ctx.fillStyle = "#2e8555";
+      ctx.fillRect(ox, oy - a * scale, a * scale, a * scale);
+      ctx.strokeStyle = "#a7f3d0";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(ox, oy - a * scale, a * scale, a * scale);
+
+      // สี่เหลี่ยมสีส้มบนด้าน b
+      ctx.fillStyle = "#c67d2a";
+      ctx.fillRect(ox - b * scale, oy, b * scale, b * scale);
+      ctx.strokeStyle = "#fde68a";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(ox - b * scale, oy, b * scale, b * scale);
+
+      // สี่เหลี่ยมสีแดงบนด้าน c
+      var px0 = ox + c0x * scale, py0 = oy + c0y * scale;
+      var px1 = ox + c1x * scale, py1 = oy + c1y * scale;
+      var px2 = ox + c2x * scale, py2 = oy + c2y * scale;
+      var px3 = ox + c3x * scale, py3 = oy + c3y * scale;
+
+      ctx.beginPath();
+      ctx.moveTo(px0, py0);
+      ctx.lineTo(px1, py1);
+      ctx.lineTo(px2, py2);
+      ctx.lineTo(px3, py3);
+      ctx.closePath();
+      ctx.fillStyle = "#c83e37";
+      ctx.fill();
+      ctx.strokeStyle = "#fecaca";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // สามเหลี่ยมมุมฉากด้านใน
+      ctx.beginPath();
+      ctx.moveTo(ox - b * scale, oy);
+      ctx.lineTo(ox, oy);
+      ctx.lineTo(ox, oy - a * scale);
+      ctx.closePath();
+      ctx.fillStyle = "#262f3d";
+      ctx.fill();
+      ctx.strokeStyle = "#cbd5e1";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // สัญลักษณ์มุมฉาก
+      var sq = Math.max(7, Math.min(12, scale * 0.4));
+      ctx.strokeStyle = "#f8fafc";
+      ctx.lineWidth = 1.6;
+      ctx.strokeRect(ox - sq, oy - sq, sq, sq);
+
+      // ตัวเลขในสี่เหลี่ยม
+      ctx.fillStyle = "#ffffff";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      var fSize = Math.max(11, Math.min(19, scale * 0.52));
+      ctx.font = "bold " + fSize + "px sans-serif";
+
+      var aLine1 = hideTarget === "a" ? "a = ?" : "a = " + a;
+      var aLine2 = hideTarget === "a" ? "a² = ?" : "a² = " + areaA;
+      var bLine1 = hideTarget === "b" ? "b = ?" : "b = " + b;
+      var bLine2 = hideTarget === "b" ? "b² = ?" : "b² = " + areaB;
+      var cLine1 = hideTarget === "c" ? "c = ?" : "c = " + cLabel;
+      var cLine2 = hideTarget === "c" ? "c² = ?" : "c² = " + areaC;
+
+      if (a * scale >= 28) {
+        ctx.fillText(aLine1, ox + (a * scale) / 2, oy - (a * scale) / 2 - fSize * 0.65);
+        ctx.fillText(aLine2, ox + (a * scale) / 2, oy - (a * scale) / 2 + fSize * 0.65);
+      }
+      if (b * scale >= 28) {
+        ctx.fillText(bLine1, ox - (b * scale) / 2, oy + (b * scale) / 2 - fSize * 0.65);
+        ctx.fillText(bLine2, ox - (b * scale) / 2, oy + (b * scale) / 2 + fSize * 0.65);
+      }
+      if (c * scale >= 34) {
+        ctx.fillText(cLine1, (px0 + px2) / 2, (py0 + py2) / 2 - fSize * 0.65);
+        ctx.fillText(cLine2, (px0 + px2) / 2, (py0 + py2) / 2 + fSize * 0.65);
+      }
+    } catch (err) {}
+  }
+
+  function switchTab(tabName) {
+    document.getElementById("tabExploreBtn").className = "tab-btn" + (tabName === "explore" ? " active" : "");
+    document.getElementById("tabChallengeBtn").className = "tab-btn" + (tabName === "challenge" ? " active" : "");
+    document.getElementById("tabQuizBtn").className = "tab-btn" + (tabName === "quiz" ? " active" : "");
+
+    document.getElementById("exploreSection").className = "section" + (tabName === "explore" ? " active" : "");
+    document.getElementById("challengeSection").className = "section" + (tabName === "challenge" ? " active" : "");
+    document.getElementById("quizSection").className = "section" + (tabName === "quiz" ? " active" : "");
+
+    if (tabName === "explore") {
+      drawShape("exploreCanvas", state.a, state.b, null);
+    } else if (tabName === "challenge") {
+      renderChallenge();
+    }
+    window.scrollTo(0, 0);
+  }
+
+  function setActivePreset(idx) {
+    for (var i = 0; i < 6; i++) {
+      var btn = document.getElementById("pre" + i);
+      if (btn) btn.className = "preset-btn" + (i === idx ? " active" : "");
+    }
+  }
+
+  function updateExplore(presetIdx) {
+    if (typeof presetIdx === "number") setActivePreset(presetIdx);
+    state.a = parseInt(document.getElementById("sliderA").value, 10) || 3;
+    state.b = parseInt(document.getElementById("sliderB").value, 10) || 4;
+
+    var areaA = state.a * state.a;
+    var areaB = state.b * state.b;
     var areaC = areaA + areaB;
-    var isExactInt = Math.abs(c - Math.round(c)) < 1e-9;
-    var cText = isExactInt ? String(Math.round(c)) : c.toFixed(1);
+    var cVal = Math.sqrt(areaC);
+    var isInt = Math.abs(cVal - Math.round(cVal)) < 1e-9;
 
-    var nx = -a / c;
-    var ny = -b / c;
+    document.getElementById("valA").textContent = state.a;
+    document.getElementById("valB").textContent = state.b;
+    document.getElementById("cardA").textContent = state.a + "² = " + areaA;
+    document.getElementById("cardB").textContent = state.b + "² = " + areaB;
+    document.getElementById("cardC").textContent = "c² = " + areaC;
 
-    var pts = [
-      { x: -b, y: 0 },
-      { x: 0, y: 0 },
-      { x: 0, y: -a },
-      { x: a, y: -a },
-      { x: a, y: 0 },
-      { x: -b, y: b },
-      { x: 0, y: b },
-      { x: -b + c * nx, y: c * ny },
-      { x: c * nx, y: -a + c * ny }
-    ];
+    document.getElementById("formulaText").textContent = isInt
+      ? (areaA + " + " + areaB + " = " + areaC + " (c = " + Math.round(cVal) + ")")
+      : (areaA + " + " + areaB + " = " + areaC + " (c ≈ " + cVal.toFixed(1) + ")");
 
-    var minX = pts[0].x, maxX = pts[0].x, minY = pts[0].y, maxY = pts[0].y;
-    for (var i = 1; i < pts.length; i++) {
-      if (pts[i].x < minX) minX = pts[i].x;
-      if (pts[i].x > maxX) maxX = pts[i].x;
-      if (pts[i].y < minY) minY = pts[i].y;
-      if (pts[i].y > maxY) maxY = pts[i].y;
+    drawShape("exploreCanvas", state.a, state.b, null);
+  }
+
+  function renderChallenge() {
+    var item = challenges[state.chIndex];
+    document.getElementById("challengePrompt").textContent = item.prompt;
+    document.getElementById("challengeLevelText").textContent = "ข้อที่ " + (state.chIndex + 1) + " / " + challenges.length;
+    document.getElementById("challengeScoreText").textContent = "คะแนน " + state.chCorrect + " / " + state.chAttempted;
+    drawShape("challengeCanvas", item.a, item.b, state.chSolved ? null : item.hide);
+  }
+
+  function handleCheckChallenge() {
+    var item = challenges[state.chIndex];
+    var input = document.getElementById("challengeInput");
+    var raw = input.value.trim();
+    var fb = document.getElementById("challengeFeedback");
+
+    if (raw === "") {
+      alert("กรุณาพิมพ์ตัวเลขคำตอบก่อนกดตรวจคำตอบครับ");
+      input.focus();
+      return;
     }
 
-    var spanX = Math.max(1, maxX - minX);
-    var spanY = Math.max(1, maxY - minY);
-    var pad = 28;
-    var scale = Math.min
+    var guess = Number(raw);
+    if (!state.chSolved) {
+      state.chAttempted++;
+      if (guess === item.ans) state.chCorrect++;
+      state.chSolved = true;
+    }
+
+    fb.style.display = "block";
+    if (guess === item.ans) {
+      fb.className = "challenge-feedback ok";
+      fb.innerHTML = "✅ <strong>ถูกต้อง!</strong> คำตอบคือ <strong>" + item.ans + "</strong> — " + item.hint;
+    } else {
+      fb.className = "challenge-feedback bad";
+      fb.innerHTML = "❌ <strong>ยังไม่ถูกครับ</strong> คำตอบที่ถูกต้องคือ <strong>" + item.ans + "</strong> — " + item.hint;
+    }
+    renderChallenge();
+  }
+
+  function handleNextChallenge() {
+    state.chIndex = (state.chIndex + 1) % challenges.length;
+    state.chSolved = false;
+    document.getElementById("challengeInput").value = "";
+    document.getElementById("challengeFeedback").style.display = "none";
+    renderChallenge();
+  }
+
+  var letters = ["ก", "ข", "ค", "ง"];
+
+  function renderQuiz() {
+    var list = document.getElementById("quizList");
+    list.innerHTML = "";
+    for (var i = 0; i < quizItems.length; i++) {
+      var q = quizItems[i];
+      var card = document.createElement("div");
+      card.className = "q-card";
+      card.id = "qCard_" + i;
+
+      var html = '<p class="q-title">' + q.q + "</p>";
+      for (var j = 0; j < q.opts.length; j++) {
+        html +=
+          '<div class="opt" id="opt_' + i + "_" + j + '" data-q="' + i + '" data-o="' + j + '">' +
+            "<strong>" + letters[j] + ".</strong><span>" + q.opts[j] + "</span>" +
+          "</div>";
+      }
+      html += '<div class="exp-box" id="exp_' + i + '">💡 <strong>แนวคิด:</strong> ' + q.exp + "</div>";
+      card.innerHTML = html;
+      list.appendChild(card);
+    }
+
+    var opts = list.querySelectorAll(".opt");
+    for (var k = 0; k < opts.length; k++) {
+      opts[k].addEventListener("click", function () {
+        if (state.submitted) return;
+        var qIdx = parseInt(this.getAttribute("data-q"), 10);
+        var oIdx = parseInt(this.getAttribute("data-o"), 10);
+        state.userPicked[qIdx] = oIdx;
+        for (var m = 0; m < 4; m++) {
+          var el = document.getElementById("opt_" + qIdx + "_" + m);
+          el.className = "opt" + (m === oIdx ? " picked" : "");
+        }
+      });
+    }
+  }
+
+  function handleGradeQuiz() {
+    var missing = state.userPicked.indexOf(null);
+    if (missing !== -1) {
+      alert("คุณยังเลือกคำตอบไม่ครบครับ กรุณาทำข้อที่ " + (missing + 1) + " ก่อนกดส่งคำตอบ");
+      var card = document.getElementById("qCard_" + missing);
+      if (card && card.scrollIntoView) card.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+
+    state.submitted = true;
+    var score = 0;
+    for (var i = 0; i < quizItems.length; i++) {
+      var q = quizItems[i];
+      document.getElementById("exp_" + i).style.display = "block";
+      var cardEl = document.getElementById("qCard_" + i);
+      if (state.userPicked[i] === q.ans) {
+        score++;
+        cardEl.className = "q-card ok";
+        document.getElementById("opt_" + i + "_" + state.userPicked[i]).className = "opt right-ans";
+      } else {
+        cardEl.className = "q-card bad";
+        document.getElementById("opt_" + i + "_" + state.userPicked[i]).className = "opt wrong-ans";
+        document.getElementById("opt_" + i + "_" + q.ans).className = "opt right-ans";
+      }
+    }
+
+    document.getElementById("submitQuizBtn").style.display = "none";
+    document.getElementById("scoreCard").style.display = "block";
+    document.getElementById("scoreNum").textContent = score + " / 5";
+    document.getElementById("scoreMsg").textContent =
+      score >= 4 ? "ยอดเยี่ยมมาก! เข้าใจความสัมพันธ์ของพื้นที่พีทาโกรัสได้ชัดเจนแล้ว" :
+      score >= 3 ? "ดีมาก! ลองอ่านกรอบ 💡 แนวคิดในข้อที่ผิดเพื่อทบทวนเพิ่มเติมนะ" :
+      "ลองอ่านกรอบ 💡 แนวคิดด้านล่าง แล้วกลับไปเล่นโหมดสำรวจและท้าทายอีกรอบนะ";
+    window.scrollTo(0, 0);
+  }
+
+  function handleResetQuiz() {
+    state.userPicked = [null, null, null, null, null];
+    state.submitted = false;
+    document.getElementById("scoreCard").style.display = "none";
+    document.getElementById("submitQuizBtn").style.display = "block";
+    renderQuiz();
+    window.scrollTo(0, 0);
+  }
+
+  function bindEvents() {
+    document.getElementById("tabExploreBtn").addEventListener("click", function () { switchTab("explore"); });
+    document.getElementById("tabChallengeBtn").addEventListener("click", function () { switchTab("challenge"); });
+    document.getElementById("tabQuizBtn").addEventListener("click", function () { switchTab("quiz"); });
+
+    var presets = [
+      [3, 4, 0],
+      [5, 12, 1],
+      [6, 8, 2],
+      [7, 24, 3],
+      [8, 15, 4]
+    ];
+    for (var i = 0; i < presets.length; i++) {
+      (function (p) {
+        document.getElementById("pre" + p[2]).addEventListener("click", function () {
+          document.getElementById("sliderA").value = p[0];
+          document.getElementById("sliderB").value = p[1];
+          updateExplore(p[2]);
+        });
+      })(presets[i]);
+    }
+    document.getElementById("pre5").addEventListener("click", function () {
+      setActivePreset(5);
+    });
+
+    document.getElementById("sliderA").addEventListener("input", function () { updateExplore(5); });
+    document.getElementById("sliderB").addEventListener("input", function () { updateExplore(5); });
+
+    document.getElementById("goChallengeBtn").addEventListener("click", function () { switchTab("challenge"); });
+    document.getElementById("goQuizBtn").addEventListener("click", function () { switchTab("quiz"); });
+
+    document.getElementById("checkChallengeBtn").addEventListener("click", handleCheckChallenge);
+    document.getElementById("nextChallengeBtn").addEventListener("click", handleNextChallenge);
+    document.getElementById("challengeInput").addEventListener("keydown", function (e) {
+      if (e.key === "Enter") handleCheckChallenge();
+    });
+
+    document.getElementById("submitQuizBtn").addEventListener("click", handleGradeQuiz);
+    document.getElementById("resetQuizBtn").addEventListener("click", handleResetQuiz);
+  }
+
+  bindEvents();
+  updateExplore(0);
+  renderChallenge();
+  renderQuiz();
+})();
+</script>
+</body>
+</html>
