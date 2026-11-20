@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>พื้นที่พีทาโกรัส & แบบทดสอบ 5 ข้อ</title>
+  <title>พื้นที่พีทาโกรัส: สำรวจ - ท้าทาย - แบบทดสอบ 5 ข้อ</title>
   <style>
     :root {
       --bg-outer: #0f172a;
@@ -48,28 +48,30 @@
     h1 { font-size: 1.25rem; margin: 0 0 4px; }
     .subtitle { font-size: 0.85rem; color: var(--muted); margin: 0 0 14px; line-height: 1.45; }
 
+    /* แถบนำทาง 3 ขั้นตอน */
     .tabs {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
+      grid-template-columns: 1fr 1fr 1.25fr;
+      gap: 6px;
       margin-bottom: 14px;
     }
 
     .tab-btn {
-      padding: 10px 8px;
+      padding: 10px 6px;
       border-radius: 10px;
       border: 1.5px solid #475569;
       background: #1e293b;
       color: var(--text);
       font-family: inherit;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: 700;
       cursor: pointer;
+      white-space: nowrap;
     }
 
     .tab-btn.active {
-      background: #3d6b56;
-      border-color: #86efac;
+      background: #63967d;
+      border-color: #bbf7d0;
       color: #ffffff;
     }
 
@@ -90,6 +92,7 @@
       height: auto;
     }
 
+    /* ==================== โหมดสำรวจ ==================== */
     .presets {
       display: flex;
       flex-wrap: wrap;
@@ -182,12 +185,112 @@
       margin-bottom: 12px;
     }
 
+    /* ==================== โหมดท้าทาย (ตามภาพต้นแบบ) ==================== */
+    .challenge-panel {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .challenge-prompt {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin: 0 0 12px;
+      line-height: 1.45;
+      color: #f8fafc;
+    }
+
+    .challenge-controls {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr 1fr;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .challenge-input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1.5px solid #64748b;
+      background: #0f172a;
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 1.05rem;
+      font-weight: 700;
+      text-align: center;
+      outline: none;
+    }
+
+    .challenge-input:focus {
+      border-color: var(--accent);
+    }
+
+    .btn-check {
+      padding: 10px 8px;
+      border: none;
+      border-radius: 10px;
+      background: #d9534f;
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-next {
+      padding: 10px 8px;
+      border: 1.5px solid #64748b;
+      border-radius: 10px;
+      background: #334155;
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .challenge-feedback {
+      display: none;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 0.86rem;
+      line-height: 1.45;
+      margin-bottom: 10px;
+    }
+
+    .challenge-feedback.ok {
+      background: rgba(34, 197, 94, 0.18);
+      border: 1px solid #4ade80;
+      color: #bbf7d0;
+    }
+
+    .challenge-feedback.bad {
+      background: rgba(239, 68, 68, 0.18);
+      border: 1px solid #f87171;
+      color: #fecaca;
+    }
+
+    .challenge-score-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.86rem;
+      color: var(--muted);
+      font-weight: 700;
+      padding-top: 4px;
+    }
+
+    /* กล่องปุ่มเชื่อมลำดับกิจกรรม */
     .jump-box {
       background: rgba(34, 197, 94, 0.14);
       border: 1.5px solid #4ade80;
       border-radius: 12px;
       padding: 12px;
       text-align: center;
+      font-size: 0.88rem;
     }
 
     .btn {
@@ -205,6 +308,7 @@
     .btn-submit { background: #2563eb; color: #ffffff; margin-top: 8px; }
     .btn-reset { background: #334155; color: #f8fafc; margin-top: 8px; }
 
+    /* ==================== โหมดแบบทดสอบ 5 ข้อ ==================== */
     .q-card {
       background: #1e293b;
       border: 1.5px solid #334155;
@@ -265,14 +369,17 @@
   <h1>พื้นที่พีทาโกรัส</h1>
   <p class="subtitle">สี่เหลี่ยมจัตุรัสที่สร้างบนแต่ละด้านของรูปสามเหลี่ยมมุมฉาก มีความสัมพันธ์กันอย่างไร</p>
 
+  <!-- แถบสลับ 3 โหมด -->
   <div class="tabs">
     <button type="button" class="tab-btn active" id="tabExploreBtn" onclick="switchTab('explore')">สำรวจ</button>
+    <button type="button" class="tab-btn" id="tabChallengeBtn" onclick="switchTab('challenge')">ท้าทาย</button>
     <button type="button" class="tab-btn" id="tabQuizBtn" onclick="switchTab('quiz')">แบบทดสอบ 5 ข้อ</button>
   </div>
 
+  <!-- ==================== 1. แท็บสำรวจ ==================== -->
   <div class="section active" id="exploreSection">
     <div class="stage-box">
-      <canvas id="pythaCanvas" width="520" height="430"></canvas>
+      <canvas id="exploreCanvas" width="520" height="430"></canvas>
     </div>
 
     <div class="presets">
@@ -316,364 +423,4 @@
     <div class="tip-line">ลองเลื่อนค่า a และ b หลาย ๆ ค่า แล้วสังเกตว่าผลบวกของพื้นที่สองสี่เหลี่ยมเล็ก เทียบกับสี่เหลี่ยมใหญ่เป็นอย่างไร</div>
 
     <div class="jump-box">
-      <div>พร้อมลองทำแบบทดสอบสั้น ๆ 5 ข้อเพื่อเช็กความเข้าใจหรือยัง?</div>
-      <button type="button" class="btn btn-jump" onclick="switchTab('quiz')">ไปทำแบบทดสอบ 5 ข้อต่อเลย ➡️</button>
-    </div>
-  </div>
-
-  <div class="section" id="quizSection">
-    <div class="score-card" id="scoreCard">
-      <div>คะแนนของคุณ</div>
-      <div class="score-num" id="scoreNum">0 / 5</div>
-      <div id="scoreMsg" style="font-weight:700;"></div>
-      <button type="button" class="btn btn-reset" onclick="resetQuiz()">🔄 ทำแบบทดสอบใหม่อีกครั้ง</button>
-    </div>
-
-    <div id="quizList"></div>
-    <button type="button" class="btn btn-submit" id="submitBtn" onclick="gradeQuiz()">✅ ส่งคำตอบ</button>
-  </div>
-</div>
-
-<script>
-  var sideA = 3;
-  var sideB = 4;
-
-  function switchTab(name) {
-    document.getElementById('tabExploreBtn').className = 'tab-btn' + (name === 'explore' ? ' active' : '');
-    document.getElementById('tabQuizBtn').className = 'tab-btn' + (name === 'quiz' ? ' active' : '');
-    document.getElementById('exploreSection').className = 'section' + (name === 'explore' ? ' active' : '');
-    document.getElementById('quizSection').className = 'section' + (name === 'quiz' ? ' active' : '');
-    if (name === 'explore') drawDiagram();
-    window.scrollTo(0, 0);
-  }
-
-  function clearPresetHighlight() {
-    for (var i = 0; i < 5; i++) {
-      var b = document.getElementById('pre' + i);
-      if (b) b.className = 'preset-btn';
-    }
-    document.getElementById('pre5').className = 'preset-btn active';
-  }
-
-  function applyPreset(a, b, idx) {
-    document.getElementById('sliderA').value = a;
-    document.getElementById('sliderB').value = b;
-    for (var i = 0; i < 6; i++) {
-      var el = document.getElementById('pre' + i);
-      if (el) el.className = 'preset-btn' + (i === idx ? ' active' : '');
-    }
-    onSliderInput(true);
-  }
-
-  function onSliderInput(fromPreset) {
-    if (!fromPreset) clearPresetHighlight();
-    sideA = Number(document.getElementById('sliderA').value) || 3;
-    sideB = Number(document.getElementById('sliderB').value) || 4;
-
-    var areaA = sideA * sideA;
-    var areaB = sideB * sideB;
-    var areaC = areaA + areaB;
-    var cVal = Math.sqrt(areaC);
-    var isExactInt = Math.abs(cVal - Math.round(cVal)) < 1e-9;
-
-    document.getElementById('valA').textContent = sideA;
-    document.getElementById('valB').textContent = sideB;
-    document.getElementById('cardA').textContent = sideA + '² = ' + areaA;
-    document.getElementById('cardB').textContent = sideB + '² = ' + areaB;
-    document.getElementById('cardC').textContent = 'c² = ' + areaC;
-
-    if (isExactInt) {
-      document.getElementById('formulaText').textContent =
-        areaA + ' + ' + areaB + ' = ' + areaC + ' (c = ' + Math.round(cVal) + ')';
-    } else {
-      document.getElementById('formulaText').textContent =
-        areaA + ' + ' + areaB + ' = ' + areaC + ' (c = √' + areaC + ' ≈ ' + cVal.toFixed(1) + ')';
-    }
-
-    drawDiagram();
-  }
-
-  function drawDiagram() {
-    var canvas = document.getElementById('pythaCanvas');
-    if (!canvas || !canvas.getContext) return;
-    var ctx = canvas.getContext('2d');
-
-    var W = canvas.width || 520;
-    var H = canvas.height || 430;
-    ctx.clearRect(0, 0, W, H);
-
-    var a = sideA;
-    var b = sideB;
-    var c = Math.sqrt(a * a + b * b);
-    var areaA = a * a;
-    var areaB = b * b;
-    var areaC = areaA + areaB;
-    var isExactInt = Math.abs(c - Math.round(c)) < 1e-9;
-    var cText = isExactInt ? String(Math.round(c)) : '√' + areaC;
-
-    // มุมฉากอยู่ที่ (0, 0) ในหน่วยความยาวด้าน
-    // ด้านตั้ง a อยู่ด้านบนจาก (0, 0) ไป (0, -a) -> สี่เหลี่ยมสีเขียวอยู่ทางขวา [0..a, -a..0]
-    // ด้านนอน b อยู่ด้านซ้ายจาก (0, 0) ไป (-b, 0) -> สี่เหลี่ยมสีส้มอยู่ด้านล่าง [-b..0, 0..b]
-    // ด้านตรงข้ามมุมฉาก c จาก (0, -a) ไป (-b, 0) -> สี่เหลี่ยมสีแดงกางออกด้านบนซ้าย (ไม่ทับ a และ b)
-    var ux = -b / c;
-    var uy = a / c;
-    var nx = -a / c;
-    var ny = -b / c;
-
-    var pts = [
-      { x: -b, y: 0 },
-      { x: 0, y: 0 },
-      { x: 0, y: -a },
-      { x: a, y: -a },
-      { x: a, y: 0 },
-      { x: -b, y: b },
-      { x: 0, y: b },
-      { x: -b * ux + c * nx, y: -a * uy + c * ny },
-      { x: c * nx, y: -a + c * ny }
-    ];
-
-    var minX = pts[0].x, maxX = pts[0].x, minY = pts[0].y, maxY = pts[0].y;
-    for (var i = 1; i < pts.length; i++) {
-      if (pts[i].x < minX) minX = pts[i].x;
-      if (pts[i].x > maxX) maxX = pts[i].x;
-      if (pts[i].y < minY) minY = pts[i].y;
-      if (pts[i].y > maxY) maxY = pts[i].y;
-    }
-
-    var spanX = Math.max(1, maxX - minX);
-    var spanY = Math.max(1, maxY - minY);
-    var pad = 28;
-    var scale = Math.min((W - pad * 2) / spanX, (H - pad * 2) / spanY) * 0.75;
-    if (!scale || scale <= 0) scale = 12;
-
-    var ox = pad + ((W - pad * 2) - spanX * scale) / 2 - minX * scale;
-    var oy = pad + ((H - pad * 2) - spanY * scale) / 2 - minY * scale;
-
-    // 1. สี่เหลี่ยมสีเขียวบนด้าน a
-    ctx.fillStyle = '#2e8555';
-    ctx.fillRect(ox, oy - a * scale, a * scale, a * scale);
-    ctx.strokeStyle = '#a7f3d0';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(ox, oy - a * scale, a * scale, a * scale);
-
-    // 2. สี่เหลี่ยมสีส้มบนด้าน b
-    ctx.fillStyle = '#c67d2a';
-    ctx.fillRect(ox - b * scale, oy, b * scale, b * scale);
-    ctx.strokeStyle = '#fde68a';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(ox - b * scale, oy, b * scale, b * scale);
-
-    // 3. สี่เหลี่ยมสีแดงบนด้าน c (กางขึ้นด้านบนซ้าย แยกชัดเจน)
-    var c0x = ox;
-    var c0y = oy - a * scale;
-    var c1x = ox - b * scale;
-    var c1y = oy;
-    var c2x = c1x + c * nx * scale;
-    var c2y = c1y + c * ny * scale;
-    var c3x = c0x + c * nx * scale;
-    var c3y = c0y + c * ny * scale;
-
-    ctx.beginPath();
-    ctx.moveTo(c0x, c0y);
-    ctx.lineTo(c1x, c1y);
-    ctx.lineTo(c2x, c2y);
-    ctx.lineTo(c3x, c3y);
-    ctx.closePath();
-    ctx.fillStyle = '#c83e37';
-    ctx.fill();
-    ctx.strokeStyle = '#fecaca';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    // 4. รูปสามเหลี่ยมมุมฉากด้านใน
-    ctx.beginPath();
-    ctx.moveTo(ox - b * scale, oy);
-    ctx.lineTo(ox, oy);
-    ctx.lineTo(ox, oy - a * scale);
-    ctx.closePath();
-    ctx.fillStyle = '#262f3d';
-    ctx.fill();
-    ctx.strokeStyle = '#cbd5e1';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    // มุมฉาก
-    var sq = Math.max(7, Math.min(12, scale * 0.42));
-    ctx.strokeStyle = '#f8fafc';
-    ctx.lineWidth = 1.6;
-    ctx.strokeRect(ox - sq, oy - sq, sq, sq);
-
-    // 5. ตัวเลขในสี่เหลี่ยมทั้งสาม
-    ctx.fillStyle = '#ffffff';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    var fSize = Math.max(11, Math.min(19, scale * 0.52));
-    ctx.font = 'bold ' + fSize + 'px sans-serif';
-
-    if (a * scale >= 30) {
-      var ax = ox + (a * scale) / 2;
-      var ay = oy - (a * scale) / 2;
-      ctx.fillText('a = ' + a, ax, ay - fSize * 0.65);
-      ctx.fillText('a² = ' + areaA, ax, ay + fSize * 0.65);
-    }
-
-    if (b * scale >= 30) {
-      var bx = ox - (b * scale) / 2;
-      var by = oy + (b * scale) / 2;
-      ctx.fillText('b = ' + b, bx, by - fSize * 0.65);
-      ctx.fillText('b² = ' + areaB, bx, by + fSize * 0.65);
-    }
-
-    if (c * scale >= 36) {
-      var cx = (c0x + c2x) / 2;
-      var cy = (c0y + c2y) / 2;
-      ctx.fillText('c = ' + cText, cx, cy - fSize * 0.65);
-      ctx.fillText('c² = ' + areaC, cx, cy + fSize * 0.65);
-    }
-  }
-
-  var quizData = [
-    {
-      q: "1. จากหน้าจอสำรวจ ถ้าเราปรับด้าน a = 3 และด้าน b = 4 พื้นที่ของสี่เหลี่ยมสีเขียวและสีส้มรวมกันได้เท่าไร",
-      opts: ["7", "12", "25", "49"],
-      ans: 2,
-      exp: "สี่เหลี่ยมบนด้าน a มีพื้นที่ 3² = 9 และด้าน b มีพื้นที่ 4² = 16 นำมาบวกกันจะได้ 9 + 16 = 25 พอดีกับพื้นที่สี่เหลี่ยมสีแดงบนด้าน c"
-    },
-    {
-      q: "2. สี่เหลี่ยมสีแดงบนด้าน c มีความสัมพันธ์กับสี่เหลี่ยมสีเขียว (a) และสีส้ม (b) อย่างไร",
-      opts: [
-        "พื้นที่สี่เหลี่ยมสีแดง เท่ากับ ผลบวกของพื้นที่สี่เหลี่ยมสีเขียวและสีส้ม",
-        "พื้นที่สี่เหลี่ยมสีแดง เท่ากับ ผลต่างของพื้นที่สี่เหลี่ยมสีเขียวและสีส้ม",
-        "ความยาวด้าน c เท่ากับ a + b เสมอ",
-        "พื้นที่สี่เหลี่ยมสีแดง จะน้อยกว่าสี่เหลี่ยมสีส้มเสมอ"
-      ],
-      ans: 0,
-      exp: "ในรูปสามเหลี่ยมมุมฉาก พื้นที่สี่เหลี่ยมบนด้านตรงข้ามมุมฉาก (สีแดง) จะเท่ากับพื้นที่สี่เหลี่ยมบนด้านประกอบมุมฉากสองด้านบวกกัน (a² + b² = c²)"
-    },
-    {
-      q: "3. ถ้าตั้งค่า a = 6 และ b = 8 พื้นที่สี่เหลี่ยมบนด้าน c จะเท่ากับเท่าไร และด้าน c ยาวเท่าไร",
-      opts: [
-        "พื้นที่ 14 และ c ยาว 14",
-        "พื้นที่ 48 และ c ยาว 7",
-        "พื้นที่ 100 และ c ยาว 10",
-        "พื้นที่ 196 และ c ยาว 14"
-      ],
-      ans: 2,
-      exp: "6² + 8² = 36 + 64 = 100 ดังนั้นพื้นที่บนด้าน c คือ 100 และเลขที่คูณกันได้ 100 คือ 10 × 10 จึงได้ c = 10"
-    },
-    {
-      q: "4. ถ้าเราเลื่อนค่า a หรือ b ให้ยาวขึ้น จะเกิดอะไรขึ้นกับสี่เหลี่ยมบนด้าน c (สีแดง)",
-      opts: [
-        "เล็กลงเสมอ",
-        "ใหญ่ขึ้นตามไปด้วย เพราะพื้นที่เพิ่มขึ้น",
-        "ไม่เปลี่ยนแปลงเลย",
-        "หายไปจากหน้าจอ"
-      ],
-      ans: 1,
-      exp: "เมื่อด้าน a หรือ b ยาวขึ้น พื้นที่ของสี่เหลี่ยมด้านนั้นจะมากขึ้น ทำให้ผลรวมพื้นที่เพิ่มขึ้น สี่เหลี่ยมสีแดงบนด้าน c จึงขยายใหญ่ขึ้นตาม"
-    },
-    {
-      q: "5. สมมติมีบันไดพาดกำแพงเกิดเป็นสามเหลี่ยมมุมฉาก โดยมีระยะห่างจากกำแพง a = 5 เมตร และความสูงบนกำแพง b = 12 เมตร พื้นที่กำลังสองของความยาวบันได (c²) คือเท่าไร",
-      opts: ["17", "60", "119", "169"],
-      ans: 3,
-      exp: "นำพื้นที่ของทั้งสองด้านมาบวกกัน: 5² + 12² = 25 + 144 = 169 (ซึ่งความยาวบันได c คือ 13 เมตร เพราะ 13 × 13 = 169)"
-    }
-  ];
-
-  var userPicked = [null, null, null, null, null];
-  var submitted = false;
-  var choiceLetters = ["ก", "ข", "ค", "ง"];
-
-  function renderQuiz() {
-    var box = document.getElementById('quizList');
-    box.innerHTML = '';
-    for (var i = 0; i < quizData.length; i++) {
-      var item = quizData[i];
-      var card = document.createElement('div');
-      card.className = 'q-card';
-      card.id = 'qCard_' + i;
-
-      var optsHtml = '';
-      for (var j = 0; j < item.opts.length; j++) {
-        optsHtml +=
-          '<div class="opt" id="opt_' + i + '_' + j + '" onclick="pickAnswer(' + i + ', ' + j + ')">' +
-            '<strong>' + choiceLetters[j] + '.</strong>' +
-            '<span>' + item.opts[j] + '</span>' +
-          '</div>';
-      }
-
-      card.innerHTML =
-        '<p class="q-title">' + item.q + '</p>' +
-        optsHtml +
-        '<div class="exp-box" id="exp_' + i + '">💡 <strong>แนวคิด:</strong> ' + item.exp + '</div>';
-
-      box.appendChild(card);
-    }
-  }
-
-  function pickAnswer(qIdx, oIdx) {
-    if (submitted) return;
-    userPicked[qIdx] = oIdx;
-    for (var j = 0; j < 4; j++) {
-      var el = document.getElementById('opt_' + qIdx + '_' + j);
-      el.className = 'opt' + (j === oIdx ? ' picked' : '');
-    }
-  }
-
-  function gradeQuiz() {
-    var missing = userPicked.indexOf(null);
-    if (missing !== -1) {
-      alert('คุณยังเลือกคำตอบไม่ครบครับ กรุณาทำข้อที่ ' + (missing + 1) + ' ก่อนกดส่งคำตอบ');
-      var target = document.getElementById('qCard_' + missing);
-      if (target && target.scrollIntoView) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      return;
-    }
-
-    submitted = true;
-    var score = 0;
-
-    for (var i = 0; i < quizData.length; i++) {
-      var item = quizData[i];
-      var card = document.getElementById('qCard_' + i);
-      document.getElementById('exp_' + i).style.display = 'block';
-
-      if (userPicked[i] === item.ans) {
-        score++;
-        card.className = 'q-card ok';
-        document.getElementById('opt_' + i + '_' + userPicked[i]).className = 'opt right-ans';
-      } else {
-        card.className = 'q-card bad';
-        document.getElementById('opt_' + i + '_' + userPicked[i]).className = 'opt wrong-ans';
-        document.getElementById('opt_' + i + '_' + item.ans).className = 'opt right-ans';
-      }
-    }
-
-    document.getElementById('submitBtn').style.display = 'none';
-    document.getElementById('scoreCard').style.display = 'block';
-    document.getElementById('scoreNum').textContent = score + ' / 5';
-    document.getElementById('scoreMsg').textContent =
-      score >= 4 ? 'ยอดเยี่ยมมาก! เข้าใจความสัมพันธ์ของพื้นที่พีทาโกรัสได้ชัดเจนแล้ว' :
-      score >= 3 ? 'ดีมาก! ลองอ่านกรอบ 💡 แนวคิดในข้อที่ผิดเพื่อทบทวนเพิ่มเติมนะ' :
-      'ลองอ่านกรอบ 💡 แนวคิดด้านล่าง แล้วกลับไปเลื่อนแถบ a และ b ดูภาพอีกรอบนะ';
-
-    window.scrollTo(0, 0);
-  }
-
-  function resetQuiz() {
-    userPicked = [null, null, null, null, null];
-    submitted = false;
-    document.getElementById('scoreCard').style.display = 'none';
-    document.getElementById('submitBtn').style.display = 'block';
-    renderQuiz();
-    window.scrollTo(0, 0);
-  }
-
-  // เรียกวาดทันทีทั้งตอน DOM พร้อมและตอน window โหลดเสร็จ เพื่อกันการค้างบนมือถือ
-  onSliderInput(true);
-  renderQuiz();
-  window.onload = function() {
-    drawDiagram();
-  };
-</script>
-</body>
-</html>
+      <div>สำรวจความสัมพันธ์เข้าใจแล้ว ลองฝึกคิด
